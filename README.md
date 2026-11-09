@@ -6,8 +6,27 @@ Nothing changes until you confirm. The TUI always shows a dry run first and requ
 
 ## Build
 
+Requires Go 1.27.1 or newer (see `go.mod`). There is no cgo, so no C toolchain is needed.
+
 ```bash
+git clone https://github.com/DanQUlXOTE/bp_labeler.git
+cd bp_labeler
 go build -o bplabeler .
+./bplabeler --help
+```
+
+To build for another platform, set `GOOS` and `GOARCH`. For example, a Linux arm64 binary from a Mac:
+
+```bash
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -trimpath -ldflags "-s -w" -o bplabeler .
+```
+
+Use `GOOS=windows` and an `.exe` output name for Windows. Prebuilt binaries for macOS, Linux and Windows are on the [Releases](https://github.com/DanQUlXOTE/bp_labeler/releases) page. Each archive has a SHA-256 in `checksums.txt`.
+
+To run the tests:
+
+```bash
+go test ./...
 ```
 
 ## Connecting
@@ -74,10 +93,4 @@ web02,Development
 
 ```bash
 bindplane get agents --limit 10000 -o json | jq -r '["hostname","id"], (.[] | [.hostname, .id]) | @csv'
-```
-
-## Tests
-
-```bash
-go test ./...
 ```
